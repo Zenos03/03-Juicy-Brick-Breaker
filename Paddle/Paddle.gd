@@ -7,8 +7,6 @@ var width_default = 0
 var decay = 0.02
 
 func _ready():
-	width = $CollisionShape2D.get_shape().get_extents().x
-	width_default = width
 	target = Vector2(Global.VP.x / 2, Global.VP.y - 80)
 
 func _physics_process(_delta):
@@ -16,13 +14,16 @@ func _physics_process(_delta):
 	position = target
 	for c in $Powerups.get_children():
 		c.payload()
+	if $Highlight.modulate.a > 0:
+		$Highlight.modulate.a -= decay
 
 func _input(event):
 	if event is InputEventMouseMotion:
 		target.x += event.relative.x
 
 func hit(_ball):
-	pass
+	$Highlight.modulate.a = 1.0
+	$Confetti.emitting = true
 
 func powerup(payload):
 	for c in $Powerups.get_children():
